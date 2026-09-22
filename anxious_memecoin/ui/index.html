@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Meme Coin</title>
+<style id="embed-gate">
+    /* fxmanifest declares ui_page (required so lb-phone can fetch this file
+       over cfx-nui-<resource>/...), which makes FiveM spin up its OWN
+       always-on top-level browser for this resource in addition to the
+       real one lb-phone embeds as a nested <iframe>. Nothing ever hides
+       that orphan top-level instance, so without this it renders fullscreen
+       over the game for every player from the moment the resource starts.
+       !important because FiveM's NUI (CEF offscreen rendering) doesn't
+       reliably treat "nothing painted" as transparent -- it can still
+       composite as solid black unless the background is explicitly
+       transparent, so visibility alone isn't enough. This whole <style>
+       tag gets removed outright (not just overridden) once we detect we're
+       genuinely nested inside another frame, letting style.css's normal
+       rules take over untouched for the copy lb-phone actually embeds. */
+    html, body {
+        background: transparent !important;
+        visibility: hidden !important;
+    }
+</style>
+<script>
+    if (window.self !== window.top) {
+        document.getElementById('embed-gate').remove();
+    }
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+    <header id="topbar">
+        <h1 id="pageTitle">Market</h1>
+        <button id="refreshBtn" title="Refresh">&#8635;</button>
+    </header>
+
+    <main id="screens">
+        <!-- MARKET -->
+        <section id="screen-market" class="screen active">
+            <div id="coinList" class="coin-list"></div>
+            <div id="marketEmpty" class="empty hidden">No coins yet. Be the first to launch one.</div>
+        </section>
+
+        <!-- COIN DETAIL -->
+        <section id="screen-detail" class="screen">
+            <button class="back-btn" data-back="market">&larr; Market</button>
+            <div id="detailHeader" class="detail-header"></div>
+            <div id="trendBanner" class="trend-banner"></div>
+            <canvas id="chart" width="600" height="220"></canvas>
+            <div id="detailStats" class="detail-stats"></div>
+
+            <div class="section-label">Recent Trades</div>
+            <div id="recentTrades" class="recent-trades"></div>
+            <div id="recentTradesEmpty" class="empty hidden">No trades yet.</div>
+
+            <div class="trade-box">
+                <div class="trade-tabs">
+                    <button class="trade-tab active" data-trade="buy">Buy</button>
+                    <button class="trade-tab" data-trade="sell">Sell</button>
+                </div>
+                <div id="holdingLine" class="holding-line"></div>
+                <input id="tradeAmount" type="number" min="0" step="any" placeholder="Amount">
+                <div id="tradeQuote" class="trade-quote"></div>
+                <button id="tradeSubmit" class="primary-btn">Buy</button>
+                <div id="tradeMsg" class="trade-msg"></div>
+            </div>
+
+            <div id="adminSection" class="admin-section hidden">
+                <button id="deleteCoinBtn" class="danger-btn">Delete Coin</button>
+                <div id="deleteConfirmRow" class="delete-confirm hidden">
+                    <span>Permanently delete this coin and its whole trade history?</span>
+                    <div class="delete-confirm-actions">
+                        <button id="deleteCancelBtn" class="secondary-btn">Cancel</button>
+                        <button id="deleteConfirmBtn" class="danger-btn">Yes, Delete</button>
+                    </div>
+                </div>
+                <div id="deleteMsg" class="trade-msg"></div>
+            </div>
+        </section>
+
+        <!-- PORTFOLIO -->
+        <section id="screen-portfolio" class="screen">
+            <div id="portfolioList" class="coin-list"></div>
+            <div id="portfolioEmpty" class="empty hidden">You don't hold anything yet.</div>
+        </section>
+
+        <!-- CREATE -->
+        <section id="screen-create" class="screen">
+            <div class="create-form">
+                <label>Coin Name<input id="createName" maxlength="24" placeholder="e.g. Dogecoin"></label>
+                <label>Ticker<input id="createTicker" maxlength="6" placeholder="e.g. DOGE"></label>
+                <label>Image URL (optional)<input id="createImage" placeholder="https://..."></label>
+                <div id="createCost" class="create-cost"></div>
+                <button id="createSubmit" class="primary-btn">Launch Coin</button>
+                <div id="createMsg" class="trade-msg"></div>
+            </div>
+        </section>
+    </main>
+
+    <nav id="navbar">
+        <button class="nav-btn active" data-screen="market">
+            <span class="nav-icon">&#128200;</span>Market
+        </button>
+        <button class="nav-btn" data-screen="portfolio">
+            <span class="nav-icon">&#128188;</span>Portfolio
+        </button>
+        <button class="nav-btn" data-screen="create">
+            <span class="nav-icon">&#10133;</span>Launch
+        </button>
+    </nav>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
